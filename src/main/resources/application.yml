@@ -1,0 +1,21 @@
+server:
+  port: 8010
+  servlet:
+    context-path: /weather-recorder
+
+spring:
+  jpa:
+    show-sql: true
+  hibernate:
+    ddl-auto: none
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-master.xml
+#  mvc:
+#    hiddenmethod:
+#      filter:
+#        enabled: true
+  datasource:
+    url: jdbc:postgresql://localhost:5433/postgres
+    username: postgres
+    password: qwerty
+    driverClassName: org.postgresql.Driver
