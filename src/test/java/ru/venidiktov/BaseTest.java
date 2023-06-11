@@ -23,6 +23,9 @@ public class BaseTest {
     public SensorsService sensorsService;
 
     @SpyBean
+    public SensorsValidate sensorsValidate;
+
+    @SpyBean
     public SensorsRepository sensorsRepository;
 
     @Container

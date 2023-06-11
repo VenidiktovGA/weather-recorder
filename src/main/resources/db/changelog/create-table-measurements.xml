@@ -1,0 +1,27 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+   <changeSet id="create-table-measurements" author="Venidiktov Gennadii">
+      <createTable tableName="measurements">
+         <column name="id" type="uuid">
+            <constraints primaryKey="true" primaryKeyName="measurements_id_pk" nullable="false" />
+         </column>
+         <column name="value" type="numeric(4,1)">
+            <constraints nullable="false"/>
+         </column>
+         <column name="raining" type="boolean">
+            <constraints nullable="false" />
+         </column>
+         <column name="sensor_name" type="varchar(255)">
+            <constraints nullable="false" />
+         </column>
+         <column name="sensor" type="uuid">
+            <constraints foreignKeyName="fk_measurements_sensors" references="sensors(id)" nullable="false" />
+         </column>
+      </createTable>
+   </changeSet>
+   <changeSet id="create-check-constraint-to-measurements-table" author="Venidiktov Gennadii">
+      <sql>
+         alter table measurements add CONSTRAINT value_range_100
+         CHECK (value &gt;= -100 AND value &lt;= 100);
+      </sql>
+   </changeSet>
+</databaseChangeLog>

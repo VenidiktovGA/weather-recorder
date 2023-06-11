@@ -12,7 +12,7 @@ public class SensorsValidate {
     private SensorsRepository sensorsRepository;
 
     public void validate(String name) {
-        if(sensorsRepository.findByName(name).isPresent()) {
+        if(sensorsRepository.findByNameIgnoreCase(name).isPresent()) {
             throw new SensorException(String.format("Сенсор с именем '%s' уже есть", name));
         }
     }

@@ -25,6 +25,10 @@ public class Sensors extends AbstractJpaPersistable<UUID> {
 
     private LocalDateTime registrationDate;
 
+    public Sensors(String name) {
+        this.name = name;
+    }
+
     @PrePersist
     public void prePersist() {
         if(registrationDate == null) {

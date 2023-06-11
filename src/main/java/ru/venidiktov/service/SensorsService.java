@@ -1,20 +1,27 @@
 package ru.venidiktov.service;
 
-import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.venidiktov.dto.SensorsDto;
+import org.springframework.transaction.annotation.Transactional;
+import ru.venidiktov.dto.RegistrationSensorRq;
+import ru.venidiktov.dto.RegistrationSensorRs;
 import ru.venidiktov.model.Sensors;
+import ru.venidiktov.repository.SensorsRepository;
 import ru.venidiktov.validator.SensorsValidate;
 
 @AllArgsConstructor
 @Service
 public class SensorsService {
 
+    private SensorsRepository sensorsRepository;
+
     private SensorsValidate sensorsValidate;
 
-    public Sensors registrationSensor(SensorsDto sensorsDto) {
-        sensorsValidate.validate(sensorsDto.getName());
-        return Sensors.builder().name("ddfdf").registrationDate(LocalDateTime.now()).build();
+    @Transactional
+    public RegistrationSensorRs registrationSensor(RegistrationSensorRq registrationSensorRq) {
+        String newSensorName = registrationSensorRq.getName();
+        sensorsValidate.validate(newSensorName);
+        sensorsRepository.save(Sensors.builder().name(newSensorName).build());
+        return new RegistrationSensorRs(String.format("Сенсор с именем '%s' успешно зарегистрирован", newSensorName));
     }
 }
