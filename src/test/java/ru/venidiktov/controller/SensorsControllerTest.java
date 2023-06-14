@@ -1,18 +1,13 @@
 package ru.venidiktov.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Optional;
 import static org.hamcrest.Matchers.equalTo;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -21,23 +16,9 @@ import ru.venidiktov.dto.RegistrationSensorRq;
 import ru.venidiktov.dto.RegistrationSensorRs;
 import ru.venidiktov.exception.SensorException;
 import ru.venidiktov.model.Sensors;
-import ru.venidiktov.repository.SensorsRepository;
-import ru.venidiktov.service.SensorsService;
-import ru.venidiktov.validator.SensorsValidate;
+import ru.venidiktov.util.BaseMvcTest;
 
-
-@WebMvcTest(controllers = SensorsController.class)
-@Import({SensorsService.class, SensorsValidate.class})
-class SensorsControllerTest {
-
-    @Autowired
-    private MockMvc mockMvc;
-
-    @Autowired
-    private ObjectMapper objectMapper;
-
-    @MockBean
-    private SensorsRepository sensorsRepository;
+class SensorsControllerTest extends BaseMvcTest {
 
     @Test
     void registrationSensor_returnCode200_ifSensorDtoCorrect() throws Exception {
@@ -52,40 +33,43 @@ class SensorsControllerTest {
                 .andExpect(content().json(objectMapper.writeValueAsString(expectedResponse)));
     }
 
-    @ParameterizedTest
-    @ValueSource(strings = {"C", "Ce", " ", "    ", "  C     ", "iiiiiiiiiiiiiiiiiiiiiiiiiiiiiii"})
-    void registrationSensor_returnCode400_ifSensorDtoNotValid(String sensorName) throws Exception {
-        mockMvc.perform(post("/sensors/registration")
-                        .contentType(MediaType.APPLICATION_JSON_VALUE)
-                        .content(String.format("{\"name\": \"%s\"}", sensorName)))
-                .andExpect(status().isBadRequest())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(jsonPath("$.message", equalTo("Имя сенсора должно быть от 3 до 30 символов")))
-                .andExpect(mvcResult -> mvcResult.getResolvedException().getClass().equals(SensorException.class));
-    }
+    @Nested
+    class Validation {
+        @ParameterizedTest
+        @ValueSource(strings = {"C", "Ce", " ", "    ", "  C     ", "iiiiiiiiiiiiiiiiiiiiiiiiiiiiiii"})
+        void registrationSensor_returnCode400_ifSensorDtoNotValid(String sensorName) throws Exception {
+            mockMvc.perform(post("/sensors/registration")
+                            .contentType(MediaType.APPLICATION_JSON_VALUE)
+                            .content(String.format("{\"name\": \"%s\"}", sensorName)))
+                    .andExpect(status().isBadRequest())
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+                    .andExpect(jsonPath("$.message", equalTo("Имя сенсора должно быть от 3 до 30 символов")))
+                    .andExpect(mvcResult -> mvcResult.getResolvedException().getClass().equals(SensorException.class));
+        }
 
-    @Test
-    void registrationSensor_returnCode400_ifFieldNameIsNull() throws Exception {
-        mockMvc.perform(post("/sensors/registration")
-                        .contentType(MediaType.APPLICATION_JSON_VALUE)
-                        .content("{}"))
-                .andExpect(status().isBadRequest())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(jsonPath("$.message", equalTo("must not be null")))
-                .andExpect(mvcResult -> mvcResult.getResolvedException().getClass().equals(SensorException.class));
-    }
+        @Test
+        void registrationSensor_returnCode400_ifFieldNameIsNull() throws Exception {
+            mockMvc.perform(post("/sensors/registration")
+                            .contentType(MediaType.APPLICATION_JSON_VALUE)
+                            .content("{}"))
+                    .andExpect(status().isBadRequest())
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+                    .andExpect(jsonPath("$.message", equalTo("Поле name обязательно")))
+                    .andExpect(mvcResult -> mvcResult.getResolvedException().getClass().equals(SensorException.class));
+        }
 
-    @Test
-    void registrationSensor_returnCode400_ifSensorWithNameExists() throws Exception {
-        String existSensorName = "Сенсор №23";
-        Mockito.doReturn(Optional.of(new Sensors(existSensorName))).when(sensorsRepository).findByNameIgnoreCase(existSensorName);
+        @Test
+        void registrationSensor_returnCode400_ifSensorWithNameExists() throws Exception {
+            String existSensorName = "Сенсор №23";
+            Mockito.doReturn(Optional.of(new Sensors(existSensorName))).when(sensorsRepository).findByNameIgnoreCase(existSensorName);
 
-        mockMvc.perform(post("/sensors/registration")
-                        .contentType(MediaType.APPLICATION_JSON_VALUE)
-                        .content(String.format("{\"name\": \"%s\"}", existSensorName)))
-                .andExpect(status().isBadRequest())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(jsonPath("$.message", equalTo("Сенсор с именем 'Сенсор №23' уже есть")))
-                .andExpect(mvcResult -> mvcResult.getResolvedException().getClass().equals(SensorException.class));
+            mockMvc.perform(post("/sensors/registration")
+                            .contentType(MediaType.APPLICATION_JSON_VALUE)
+                            .content(String.format("{\"name\": \"%s\"}", existSensorName)))
+                    .andExpect(status().isBadRequest())
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+                    .andExpect(jsonPath("$.message", equalTo("Сенсор с именем 'Сенсор №23' уже есть")))
+                    .andExpect(mvcResult -> mvcResult.getResolvedException().getClass().equals(SensorException.class));
+        }
     }
 }

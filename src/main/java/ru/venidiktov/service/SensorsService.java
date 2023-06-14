@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.venidiktov.dto.RegistrationSensorRq;
 import ru.venidiktov.dto.RegistrationSensorRs;
+import ru.venidiktov.exception.SensorException;
 import ru.venidiktov.model.Sensors;
 import ru.venidiktov.repository.SensorsRepository;
 import ru.venidiktov.validator.SensorsValidate;
@@ -16,6 +17,12 @@ public class SensorsService {
     private SensorsRepository sensorsRepository;
 
     private SensorsValidate sensorsValidate;
+
+    public Sensors getSensorByNameIgnoreCase(String name) {
+        return sensorsRepository.findByNameIgnoreCase(name).orElseThrow(
+                () -> new SensorException(String.format("Сенсор с именем '%s' не найден", name))
+        );
+    }
 
     @Transactional
     public RegistrationSensorRs registrationSensor(RegistrationSensorRq registrationSensorRq) {

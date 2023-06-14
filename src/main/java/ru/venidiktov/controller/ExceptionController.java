@@ -4,6 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import ru.venidiktov.exception.MeasurementsException;
 import ru.venidiktov.exception.SensorException;
 import ru.venidiktov.util.ErrorResponse;
 
@@ -12,6 +13,11 @@ public class ExceptionController {
 
     @ExceptionHandler
     public ResponseEntity<ErrorResponse> sensorsException(SensorException ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(ex.getMessage(), System.currentTimeMillis()));
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<ErrorResponse> sensorsException(MeasurementsException ex) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(ex.getMessage(), System.currentTimeMillis()));
     }
 }

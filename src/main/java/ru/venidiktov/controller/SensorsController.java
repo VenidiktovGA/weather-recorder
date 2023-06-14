@@ -21,10 +21,10 @@ public class SensorsController {
 
     private SensorsService sensorsService;
 
-    @PostMapping(path = "/registration", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(path = "/registration", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary = "Сохранить JSON в базе данных")
-    public RegistrationSensorRs registration(@RequestBody @Valid RegistrationSensorRq registrationSensorRq, BindingResult bindingResult) {
+    public RegistrationSensorRs registration(@RequestBody @Valid RegistrationSensorRq request, BindingResult bindingResult) {
         if(bindingResult.hasErrors()) throw new SensorException(bindingResult.getAllErrors().get(0).getDefaultMessage());
-        return sensorsService.registrationSensor(registrationSensorRq);
+        return sensorsService.registrationSensor(request);
     }
 }

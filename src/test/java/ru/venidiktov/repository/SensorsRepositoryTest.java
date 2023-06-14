@@ -13,7 +13,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import ru.venidiktov.BaseTest;
+import ru.venidiktov.util.BaseTest;
 import ru.venidiktov.model.Sensors;
 
 @Transactional(propagation = Propagation.NOT_SUPPORTED)

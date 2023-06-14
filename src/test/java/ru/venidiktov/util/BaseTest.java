@@ -1,4 +1,4 @@
-package ru.venidiktov;
+package ru.venidiktov.util;
 
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -9,13 +9,15 @@ import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
+import ru.venidiktov.repository.MeasurementsRepository;
 import ru.venidiktov.repository.SensorsRepository;
+import ru.venidiktov.service.MeasurementsService;
 import ru.venidiktov.service.SensorsService;
 import ru.venidiktov.validator.SensorsValidate;
 
 @DataJpaTest
 @Testcontainers
-@Import({SensorsService.class, SensorsValidate.class})
+@Import({SensorsService.class, MeasurementsService.class, SensorsValidate.class})
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 public class BaseTest {
 
@@ -23,10 +25,16 @@ public class BaseTest {
     public SensorsService sensorsService;
 
     @SpyBean
+    public MeasurementsService measurementsService;
+
+    @SpyBean
     public SensorsValidate sensorsValidate;
 
     @SpyBean
     public SensorsRepository sensorsRepository;
+
+    @SpyBean
+    public MeasurementsRepository measurementsRepository;
 
     @Container
     public static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:13.3");
