@@ -1,4 +1,4 @@
-package ru.venidiktov.dto;
+package ru.venidiktov.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,6 +7,6 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class RegistrationSensorRs {
+public class SensorRs {
     private String message;
 }

@@ -1,4 +1,4 @@
-package ru.venidiktov.dto;
+package ru.venidiktov.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.validation.Valid;
@@ -16,7 +16,7 @@ import ru.venidiktov.service.SensorsService;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class MeasurementsRq {
+public class MeasurementRq {
 
     @NotNull(message = "Поле value обязательно")
     @Min(value = -100, message = "Минимальное значение показателя сенсора -100")
@@ -28,7 +28,7 @@ public class MeasurementsRq {
 
     @Valid
     @NotNull(message = "Поле sensor обязательно")
-    private RegistrationSensorRq sensor;
+    private SensorRq sensor;
 
     public Measurements toMeasurements(SensorsService sensorsService) {
         Sensors existSensor = sensorsService.getSensorByNameIgnoreCase(this.sensor.getName());

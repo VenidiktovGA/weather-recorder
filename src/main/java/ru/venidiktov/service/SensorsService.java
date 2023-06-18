@@ -3,8 +3,8 @@ package ru.venidiktov.service;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.venidiktov.dto.RegistrationSensorRq;
-import ru.venidiktov.dto.RegistrationSensorRs;
+import ru.venidiktov.dto.request.SensorRq;
+import ru.venidiktov.dto.response.SensorRs;
 import ru.venidiktov.exception.SensorException;
 import ru.venidiktov.model.Sensors;
 import ru.venidiktov.repository.SensorsRepository;
@@ -25,10 +25,10 @@ public class SensorsService {
     }
 
     @Transactional
-    public RegistrationSensorRs registrationSensor(RegistrationSensorRq registrationSensorRq) {
-        String newSensorName = registrationSensorRq.getName();
+    public SensorRs registrationSensor(SensorRq sensorRq) {
+        String newSensorName = sensorRq.getName();
         sensorsValidate.validate(newSensorName);
         sensorsRepository.save(Sensors.builder().name(newSensorName).build());
-        return new RegistrationSensorRs(String.format("Сенсор с именем '%s' успешно зарегистрирован", newSensorName));
+        return new SensorRs(String.format("Сенсор с именем '%s' успешно зарегистрирован", newSensorName));
     }
 }

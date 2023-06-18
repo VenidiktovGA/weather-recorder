@@ -8,11 +8,13 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import static org.mockito.Mockito.doReturn;
 import org.mockito.junit.jupiter.MockitoExtension;
+import ru.venidiktov.dto.request.MeasurementRq;
+import ru.venidiktov.dto.request.SensorRq;
 import ru.venidiktov.model.Sensors;
 import ru.venidiktov.service.SensorsService;
 
 @ExtendWith(MockitoExtension.class)
-class MeasurementsRqTest {
+class MeasurementRqTest {
 
     @Mock
     private SensorsService sensorsService;
@@ -20,7 +22,7 @@ class MeasurementsRqTest {
     @Test
     void toMeasurements_success() {
         doReturn(new Sensors("Сенсор №1")).when(sensorsService).getSensorByNameIgnoreCase("Сенсор №1");
-        var request = new MeasurementsRq(50.5, false, new RegistrationSensorRq("Сенсор №1"));
+        var request = new MeasurementRq(50.5, false, new SensorRq("Сенсор №1"));
 
         var measurements = request.toMeasurements(sensorsService);
 

@@ -12,7 +12,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.Mockito;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import ru.venidiktov.dto.RegistrationSensorRq;
+import ru.venidiktov.dto.request.SensorRq;
 import ru.venidiktov.exception.SensorException;
 import ru.venidiktov.model.Sensors;
 import ru.venidiktov.util.BaseTest;
@@ -29,7 +29,7 @@ class SensorsServiceTest extends BaseTest {
 
         @Test
         void successRegistrationSensor() {
-            var request = new RegistrationSensorRq("Сенсор №210");
+            var request = new SensorRq("Сенсор №210");
 
             var response = sensorsService.registrationSensor(request);
 
@@ -48,7 +48,7 @@ class SensorsServiceTest extends BaseTest {
             sensorsRepository.saveAndFlush(new Sensors(existNameSensor));
 
             assertThatThrownBy(() -> {
-                sensorsService.registrationSensor(new RegistrationSensorRq(existNameSensor));
+                sensorsService.registrationSensor(new SensorRq(existNameSensor));
             }).isInstanceOf(SensorException.class)
                     .hasMessageContaining(String.format("Сенсор с именем '%s' уже есть", existNameSensor));
             Mockito.verify(sensorsValidate).validate(existNameSensor);

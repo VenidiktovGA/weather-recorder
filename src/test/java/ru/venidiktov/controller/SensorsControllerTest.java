@@ -12,8 +12,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import ru.venidiktov.dto.RegistrationSensorRq;
-import ru.venidiktov.dto.RegistrationSensorRs;
+import ru.venidiktov.dto.request.SensorRq;
+import ru.venidiktov.dto.response.SensorRs;
 import ru.venidiktov.exception.SensorException;
 import ru.venidiktov.model.Sensors;
 import ru.venidiktov.util.BaseMvcTest;
@@ -22,13 +22,13 @@ class SensorsControllerTest extends BaseMvcTest {
 
     @Test
     void registrationSensor_returnCode200_ifSensorDtoCorrect() throws Exception {
-        RegistrationSensorRq registrationSensorRq = new RegistrationSensorRq("Сенсор ВЕКТОР");
+        SensorRq sensorRq = new SensorRq("Сенсор ВЕКТОР");
 
-        RegistrationSensorRs expectedResponse = new RegistrationSensorRs("Сенсор с именем 'Сенсор ВЕКТОР' успешно зарегистрирован");
+        SensorRs expectedResponse = new SensorRs("Сенсор с именем 'Сенсор ВЕКТОР' успешно зарегистрирован");
 
         mockMvc.perform(post("/sensors/registration")
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
-                        .content(objectMapper.writeValueAsString(registrationSensorRq)))
+                        .content(objectMapper.writeValueAsString(sensorRq)))
                 .andExpect(status().isOk())
                 .andExpect(content().json(objectMapper.writeValueAsString(expectedResponse)));
     }

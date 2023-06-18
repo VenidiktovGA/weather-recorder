@@ -1,4 +1,4 @@
-package ru.venidiktov.dto;
+package ru.venidiktov.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -11,14 +11,14 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Schema(name = "Запрос", description = "JSON запроса приходящий к нам с клиента")
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class RegistrationSensorRq {
+public class SensorRq {
 
     @NotNull(message = "Поле name обязательно")
     @Size(min = 3, max = 30, message = "Имя сенсора должно быть от 3 до 30 символов")
     private String name;
 
     /*Используется при серриализации json в класс когда он находится в другом классе*/
-    public RegistrationSensorRq(String name) {
+    public SensorRq(String name) {
         this.name = name.trim();
     }
 
