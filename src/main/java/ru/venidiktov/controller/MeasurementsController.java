@@ -32,4 +32,9 @@ public class MeasurementsController {
     public List<MeasurementRs> getAllMeasurements() {
         return measurementsService.getAllMeasurements();
     }
+
+    @GetMapping(path = "/rainyDaysCount", produces = MediaType.APPLICATION_JSON_VALUE)
+    public Long getRainyDaysCount() {
+        return measurementsService.getCountRainingDays();
+    }
 }

@@ -1,18 +1,21 @@
 package ru.venidiktov.service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.stream.Stream;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import org.junit.jupiter.api.AfterEach;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import static org.mockito.ArgumentMatchers.any;
 import org.mockito.Mockito;
 import static org.mockito.Mockito.times;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 import ru.venidiktov.dto.request.MeasurementRq;
 import ru.venidiktov.dto.request.SensorRq;
 import ru.venidiktov.exception.SensorException;
@@ -20,7 +23,7 @@ import ru.venidiktov.model.Measurements;
 import ru.venidiktov.model.Sensors;
 import ru.venidiktov.util.BaseTest;
 
-@Transactional(propagation = Propagation.NOT_SUPPORTED)
+//@Transactional(propagation = Propagation.NOT_SUPPORTED)
 class MeasurementsServiceTest extends BaseTest {
     @AfterEach
     void clear() {
@@ -91,6 +94,34 @@ class MeasurementsServiceTest extends BaseTest {
             var existMeasurements = measurementsService.getAllMeasurements();
 
             assertThat(existMeasurements).isEmpty();
+        }
+    }
+
+    @Nested
+    class GetCountRainingDays {
+        @ParameterizedTest
+        @MethodSource("getArgumentsRainingDays")
+        void getCountRainingDays(int count, int expectedCountRainingDays) {
+            var vectorM = new Sensors("Вектор М");
+            sensorsRepository.saveAndFlush(vectorM);
+            var measurements = new ArrayList<Measurements>();
+            for(int i = 0; i < count; i++) {
+                measurements.add(new Measurements(22.2, true, LocalDateTime.now(), vectorM.getName(), vectorM));
+            }
+            measurementsRepository.saveAllAndFlush(measurements);
+            measurementsRepository.saveAndFlush(new Measurements(22.2, false, LocalDateTime.now(), vectorM.getName(), vectorM));
+
+            var rainingDays = measurementsService.getCountRainingDays();
+
+            assertThat(rainingDays).isEqualTo(expectedCountRainingDays);
+        }
+
+        static Stream<Arguments> getArgumentsRainingDays() {
+            return Stream.of(
+                    Arguments.of(0, 0),
+                    Arguments.of(1, 1),
+                    Arguments.of(5, 5)
+            );
         }
     }
 }

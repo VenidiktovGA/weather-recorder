@@ -26,4 +26,8 @@ public class MeasurementsService {
         return measurementsRepository.findAll(Sort.by(Sort.Direction.DESC, "created"))
                 .stream().map(Measurements::toMeasurementRs).toList();
     }
+
+    public Long getCountRainingDays() {
+        return measurementsRepository.countByRaining(true);
+    }
 }

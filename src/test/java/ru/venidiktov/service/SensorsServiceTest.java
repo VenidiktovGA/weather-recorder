@@ -19,14 +19,13 @@ import ru.venidiktov.util.BaseTest;
 
 @Transactional(propagation = Propagation.NOT_SUPPORTED)
 class SensorsServiceTest extends BaseTest {
+    @AfterEach
+    void clear() {
+        sensorsRepository.deleteAll();
+    }
 
     @Nested
     class RegistrationSensor {
-        @AfterEach
-        void clear() {
-            sensorsRepository.deleteAll();
-        }
-
         @Test
         void successRegistrationSensor() {
             var request = new SensorRq("Сенсор №210");
@@ -57,11 +56,6 @@ class SensorsServiceTest extends BaseTest {
 
     @Nested
     class GetSensorByNameIgnoreCase {
-        @AfterEach
-        void clear() {
-            sensorsRepository.deleteAll();
-        }
-
         @ParameterizedTest
         @ValueSource(strings = {"СЕНСОР №21", "сенсор №21", "СЕНсор №21"})
         void successReturnSensorByName_ifSensorExist(String sensorName) {

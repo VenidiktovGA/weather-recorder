@@ -121,4 +121,18 @@ class MeasurementsControllerTest extends BaseMvcTest {
                     .andExpect(content().json("[]"));
         }
     }
+
+    @Nested
+    class GetRainyDaysCount {
+        @Test
+        void return200AndCountMeasurements() throws Exception {
+            Mockito.doReturn(1L).when(measurementsService).getCountRainingDays();
+
+            mockMvc.perform(get("/measurements/rainyDaysCount"))
+                    .andDo(print())
+                    .andExpect(status().isOk())
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+                    .andExpect(content().json("1"));
+        }
+    }
 }
