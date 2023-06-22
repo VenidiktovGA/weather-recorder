@@ -16,6 +16,8 @@ import org.junit.jupiter.params.provider.MethodSource;
 import static org.mockito.ArgumentMatchers.any;
 import org.mockito.Mockito;
 import static org.mockito.Mockito.times;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import ru.venidiktov.dto.request.MeasurementRq;
 import ru.venidiktov.dto.request.SensorRq;
 import ru.venidiktov.exception.SensorException;
@@ -23,7 +25,7 @@ import ru.venidiktov.model.Measurements;
 import ru.venidiktov.model.Sensors;
 import ru.venidiktov.util.BaseTest;
 
-//@Transactional(propagation = Propagation.NOT_SUPPORTED)
+@Transactional(propagation = Propagation.NOT_SUPPORTED)
 class MeasurementsServiceTest extends BaseTest {
     @AfterEach
     void clear() {

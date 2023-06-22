@@ -13,7 +13,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import ru.venidiktov.dto.request.SensorRq;
-import ru.venidiktov.dto.response.SensorRs;
+import ru.venidiktov.dto.response.RegistrationRs;
 import ru.venidiktov.exception.SensorException;
 import ru.venidiktov.model.Sensors;
 import ru.venidiktov.util.BaseMvcTest;
@@ -24,7 +24,7 @@ class SensorsControllerTest extends BaseMvcTest {
     void registrationSensor_returnCode200_ifSensorDtoCorrect() throws Exception {
         SensorRq sensorRq = new SensorRq("Сенсор ВЕКТОР");
 
-        SensorRs expectedResponse = new SensorRs("Сенсор с именем 'Сенсор ВЕКТОР' успешно зарегистрирован");
+        RegistrationRs expectedResponse = new RegistrationRs("Сенсор с именем 'Сенсор ВЕКТОР' успешно зарегистрирован");
 
         mockMvc.perform(post("/sensors/registration")
                         .contentType(MediaType.APPLICATION_JSON_VALUE)

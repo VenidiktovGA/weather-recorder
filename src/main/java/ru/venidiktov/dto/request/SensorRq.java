@@ -9,12 +9,13 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-@Schema(name = "Запрос", description = "JSON запроса приходящий к нам с клиента")
 @JsonInclude(JsonInclude.Include.NON_NULL)
+@Schema(name = "Зарегистрировать сенсор", description = "Сенсор на регистрации")
 public class SensorRq {
 
     @NotNull(message = "Поле name обязательно")
     @Size(min = 3, max = 30, message = "Имя сенсора должно быть от 3 до 30 символов")
+    @Schema(description = "Имя сенсора", required = true, minLength = 3, maxLength = 30)
     private String name;
 
     /*Используется при серриализации json в класс когда он находится в другом классе*/
